@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spaceship.mapper.UserMapper">
+
+  <select id="login" resultType="com.spaceship.user.domain.UserVO">
+  select uid, upw, unick
+  from user
+  where uid = #{uid} and upw = #{upw}
+  </select>
+  
+  <update id="keepLogin" >
+  update user set sessionKey = #{sessionId}, sessionLimit = #{next} where uid = #{uid}
+  </update>
+
+  <select id="checkUserWithSessionKey" resultType="com.spaceship.user.domain.UserVO">
+  select * from TBL_USER where sessionKey = #{value}  and sessionlimit > now()
+  </select>
+  
+  <insert id="insert">
+  insert into user (uid, upw, unick)
+  values(#{uid}, #{upw}, #{unick})
+  </insert>	
+	
+  <update id="update">
+  update user set upw=#{upw}, unick=#{unick}
+  where uid=#{uid}
+  </update>
+  
+  <select id="select" resultType="com.spaceship.user.domain.UserVO"> 
+  select uid, upw, unick
+  from user
+  where uid = #{uid}
+  </select>
+  
+</mapper>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spaceship.mapper.BoardMapper">
+
+  <insert id="create">
+  insert into board (btitle, uid)
+  values(#{btitle},#{uid})
+  </insert>
+  
+  <insert id="createList">
+  insert into list (ltitle, bidx)
+  values(#{ltitle},#{bidx})
+  </insert>
+  
+  <select id="bidx" resultType="com.spaceship.board.domain.BoardVO">
+  select *
+  from board 
+  order by bidx desc limit 1
+  </select>
+  
+  <insert id="belong">
+  insert into belong (uid, bidx)
+  values(#{uid}, #{bidx})
+  </insert>
+  
+  <delete id="deleteBelong">
+  delete from belong 
+  where bidx = #{bidx} and uid = #{uid}
+  </delete>
+  
+  <select id="read" resultType="com.spaceship.board.domain.BoardVO">
+  select
+    bidx, btitle, uid, credate
+  from
+  	board
+  where bidx = #{bidx}
+  </select>
+  
+  <update id="update">
+  update board set btitle = #{btitle}
+  where bidx = #{bidx}
+  </update>
+  
+  <delete id="deleteBoard">
+  delete from board where bidx = #{bidx}
+  </delete>
+  
+  <delete id="deleteBoardList">
+  delete from list where bidx = #{bidx}
+  </delete>
+  
+  <delete id="deleteBoardCard">
+  delete from card where bidx = #{bidx}
+  </delete>
+  
+  <delete id="deleteList">
+  delete from list where lidx = #{lidx}
+  </delete>
+  
+  <delete id="deleteListCard">
+  delete from card where lidx = #{lidx}
+  </delete>
+  
+  <select id="listAll" resultType="com.spaceship.board.domain.BoardVO">
+  <![CDATA[
+  select
+    b.bidx, b.btitle, b.uid, b.credate
+  from
+    belong a, board b
+  where a.uid = #{uid} and b.bidx > 0 and a.bidx = b.bidx
+  order by btitle asc
+  ]]>
+  </select>
+  
+  <select id="checkBelong" resultType="com.spaceship.user.domain.UserVO">
+  <![CDATA[
+  select
+  	b.unick, b.uid
+  from
+  	belong a, user b
+  where a.bidx = #{bidx} and a.uid = b.uid
+  order by b.unick asc
+  ]]>
+  </select>
+  
+  <select id="listAllList" resultType="com.spaceship.board.domain.ListVO">
+  <![CDATA[
+  select
+    lidx, bidx, ltitle, credate
+  from
+    list
+  where bidx = #{bidx} and lidx > 0
+  order by credate asc
+  ]]>
+  </select>
+  
+  <select id="listAllCard" resultType="com.spaceship.card.domain.CardVO">
+  <![CDATA[
+  select
+    a.cidx, a.bidx, a.lidx, a.ctitle, a.content, a.grade, a.credate, a.deadline, b.ltitle
+  from
+    card a, list b
+  where a.bidx = #{bidx} and a.cidx > 0 and a.lidx = b.lidx
+  order by grade asc
+  ]]>
+  </select>
+  
+  <select id="listAllAttach" resultType="com.spaceship.card.domain.CardVO">
+  <![CDATA[
+  select
+    attachname, originalname, cidx, bidx, credate
+  from
+    attach
+  where bidx = #{bidx}
+  order by credate desc
+  ]]>
+  </select>
+  
+  <select id="listAllReply" resultType="com.spaceship.card.domain.ReplyVO">
+  <![CDATA[
+  select
+    *
+  from
+    reply
+  where bidx = #{bidx}
+  order by credate desc
+  ]]>
+  </select>
+  
+  <select id="listRecentReply" resultType="com.spaceship.card.domain.ReplyVO">
+  <![CDATA[
+  select
+    a.ridx, a.cidx, a.bidx, a.rcontent, a.ruid, a.credate, b.ctitle
+  from
+    reply a, card b
+  where a.bidx = #{bidx} and a.cidx = b.cidx
+  order by a.credate desc
+  limit 7
+  ]]>
+  </select>
+  
+</mapper>

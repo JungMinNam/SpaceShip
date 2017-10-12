@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spaceship.mapper.CardMapper">
+
+  <insert id="createCard">
+  insert into card (bidx, lidx, ctitle, content, uid)
+  values(#{bidx}, #{lidx},#{ctitle},#{content},#{uid})
+  </insert>
+  
+  <select id="cidx" resultType="com.spaceship.card.domain.CardVO">
+  select *
+  from card
+  order by cidx desc limit 1
+  </select>
+  
+  <insert id="belongCard">
+  insert into belongcard (uid, cidx)
+  values(#{uid}, #{cidx})
+  </insert>
+
+  <update id="updateCard">
+  update card set ctitle = #{ctitle} and content = #{content}
+  where cidx = #{cidx}
+  </update>
+  
+  <update id="updateCardLabel">
+  update card set grade = #{grade}
+  where cidx = #{cidx}
+  </update>
+  
+  <update id="updateCardFinish">
+  update card set grade = 6
+  where cidx = #{cidx}
+  </update>
+  
+  <delete id="deleteCard">
+  delete from card where cidx = #{cidx}
+  </delete>
+  
+  <select id="readCard" resultType="com.spaceship.card.domain.CardVO">
+  select
+    *
+  from
+  	card
+  where cidx = #{cidx}
+  </select>
+  
+  <insert id="addAttach">
+  insert into attach(attachname, originalname, cidx, bidx) values(#{attachname}, #{originalname}, #{cidx}, #{bidx})
+  </insert>
+  
+  <delete id="deleteAttach">
+  delete from attach where attachname = #{attachname}
+  </delete>
+  
+  <insert id="addReply">
+  insert into reply(cidx, bidx, rcontent, ruid) values(#{cidx}, #{bidx}, #{rcontent}, #{ruid})
+  </insert>
+  
+  <delete id="deleteReply">
+  delete from reply where ridx = #{ridx}
+  </delete>
+  
+</mapper>
